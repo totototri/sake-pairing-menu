@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本酒ペアリングメニュー | Sake Pairing Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .language-selector {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .language-buttons {
+            display: inline-flex;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 5px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .lang-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 45px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0 3px;
+        }
+        
+        .lang-btn.active {
+            background: white;
+            color: #2c3e50;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .lang-btn:not(.active) {
+            background: transparent;
+            color: white;
+        }
+        
+        .lang-btn:not(.active):hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .sake-list {
+            padding: 30px;
+        }
+        
+        .sake-item {
+            margin-bottom: 25px;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .sake-item:hover {
+            border-color: #3498db;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.2);
+        }
+        
+        .sake-item.active {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+        }
+        
+        .sake-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .sake-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .sake-origin {
+            color: #7f8c8d;
+            font-size: 1em;
+            margin-bottom: 12px;
+        }
+        
+        .pairing-info {
+            font-size: 0.95em;
+            color: #34495e;
+            line-height: 1.5;
+        }
+        
+        .sake-details {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .sake-details.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .details-content h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .details-content p {
+            line-height: 1.6;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+        
+        .click-instruction {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        /* Language-specific content */
+        .content-ja, .content-en {
+            display: none;
+        }
+        
+        .content-ja.active, .content-en.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <div class="language-buttons">
+            <button class="lang-btn active" onclick="switchLanguage('ja')">🇯🇵 日本語</button>
+            <button class="lang-btn" onclick="switchLanguage('en')">🇺🇸 English</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Japanese Header -->
+        <div class="header content-ja active">
+            <h1>🍶 日本酒ペアリングメニュー</h1>
+            <p>2024年9月 - プレミアム日本酒セレクション</p>
+        </div>
+        
+        <!-- English Header -->
+        <div class="header content-en">
+            <h1>🍶 Sake Pairing Menu</h1>
+            <p>September 2024 - Premium Sake Selection</p>
+        </div>
+        
+        <div class="sake-list">
+            <!-- Japanese Instructions -->
+            <p class="click-instruction content-ja active">各日本酒名をクリックすると詳細情報が表示されます</p>
+            <!-- English Instructions -->
+            <p class="click-instruction content-en">Click on each sake name to view detailed information</p>
+            
+            <!-- Sake Item 1 -->
+            <div class="sake-item" onclick="toggleDetails(1)">
+                <span class="sake-number">①</span>
+                
+                <!-- Japanese Content -->
+                <div class="content-ja active">
+                    <div class="sake-name">アビス (Abysse)</div>
+                    <div class="sake-origin">静岡・花の舞酒造</div>
+                    <div class="pairing-info">しじみの吸い出し、海ぶどう・わかめ、あん肝と奈良漬の巻物</div>
+                </div>
+                
+                <!-- English Content -->
+                <div class="content-en">
+                    <div class="sake-name">Abysse</div>
+                    <div class="sake-origin">Shizuoka・Hana no Mai Brewery</div>
+                    <div class="pairing-info">Corbicula soup, sea grapes & wakame, monkfish liver with Nara pickles roll</div>
+                </div>
+                
+                <div class="sake-details" id="details1">
+                    <!-- Japanese Details -->
+                    <div class="details-content content-ja active">
+                        <h3>🌊 アビス (Abysse) の特徴</h3>
+                        <p>通常の日本酒造りに使われる酵母でなく<strong>ワイン酵母を使用</strong>した革新的な日本酒です。ワインのような酸味とほのかな甘みが飲みやすさを演出します。</p>
+                        <p>柑橘系果実、スイカズラを想起させる穏やかな花の香り。タックは穏やかで、主張はあるが黒ブドウに似た、角の取れた酸味が感じられます。非常に革新的で洋風な味わいが特徴です。</p>
+                    </div>
+                    
+                    <!-- English Details -->
+                    <div class="details-content content-en">
+                        <h3>🌊 Abysse Characteristics</h3>
+                        <p>A unique Japanese sake brewed using <strong>wine yeast</strong> instead of traditional sake yeast, creating wine-like acidity and subtle sweetness that makes it very approachable.</p>
+                        <p>Features gentle floral aromas reminiscent of citrus fruits and honeysuckle, with a smooth mouthfeel and rounded acidity similar to dark grapes. This innovative sake offers Western-style characteristics.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sake Item 2 -->
+            <div class="sake-item" onclick="toggleDetails(2)">
+                <span class="sake-number">②</span>
+                
+                <div class="content-ja active">
+                    <div class="sake-name">手取川 秋 純米辛口</div>
+                    <div class="sake-origin">石川・吉田酒造店</div>
+                    <div class="pairing-info">お刺身</div>
+                </div>
+                
+                <div class="content-en">
+                    <div class="sake-name">Tedorigawa Aki Junmai Karakuchi</div>
+                    <div class="sake-origin">Ishikawa・Yoshida Brewery</div>
+                    <div class="pairing-info">Sashimi</div>
+                </div>
+                
+                <div class="sake-details" id="details2">
+                    <div class="details-content content-ja active">
+                        <h3>🍂 手取川 秋の特徴</h3>
+                        <p>シャープでスマートな<strong>辛口の秋酒</strong>。手取川四季シリーズの「秋」の純米酒で、落ち着きのある飲み口にスッキリと辛口、それでいて手取川らしいきりっとしたキレを持つお酒です。</p>
+                        <p>なめらかな口当たりと綺麗な味わいが特徴の辛口純米酒で、お刺身との相性は抜群です。</p>
+                    </div>
+                    
+                    <div class="details-content content-en">
+                        <h3>🍂 Tedorigawa Aki Characteristics</h3>
+                        <p>A sharp and smart <strong>dry autumn sake</strong> from the Tedorigawa seasonal series. This junmai has a composed drinking style with clean dryness while maintaining Tedorigawa's characteristic crisp finish.</p>
+                        <p>Features smooth mouthfeel and clean flavor profile typical of dry junmai sake, creating perfect harmony with sashimi.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sake Item 3 -->
+            <div class="sake-item" onclick="toggleDetails(3)">
+                <span class="sake-number">③</span>
+                
+                <div class="content-ja active">
+                    <div class="sake-name">いづみ橋 とんぼ生酛山田錦</div>
+                    <div class="sake-origin">神奈川・泉橋酒造</div>
+                    <div class="pairing-info">鮑、西京焼き</div>
+                </div>
+                
+                <div class="content-en">
+                    <div class="sake-name">Izumibashi Tombo Kimoto Yamadanishiki</div>
+                    <div class="sake-origin">Kanagawa・Izumibashi Brewery</div>
+                    <div class="pairing-info">Abalone, Saikyo-yaki</div>
+                </div>
+                
+                <div class="sake-details" id="details3">
+                    <div class="details-content content-ja active">
+                        <h3>🌾 いづみ橋 とんぼの特徴</h3>
+                        <p><strong>生酛造り</strong>で醸された山田錦100%の日本酒。神奈川の蔵らしい現代的なアプローチで、伝統的な生酛造りの深みと酸味を持ちながら、洗練された味わいが特徴です。</p>
+                        <p>複雑で奥深い味わいが、鮑や西京焼きなどの上質な料理と見事に調和します。</p>
+                    </div>
+                    
+                    <div class="details-content content-en">
+                        <h3>🌾 Izumibashi Tombo Characteristics</h3>
+                        <p>A sake made with 100% Yamadanishiki rice using the traditional <strong>kimoto brewing method</strong>. This Kanagawa brewery takes a modern approach while preserving the depth and acidity of traditional kimoto brewing.</p>
+                        <p>Complex and profound flavors harmonize beautifully with premium dishes like abalone and Saikyo-yaki.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sake Item 4 -->
+            <div class="sake-item" onclick="toggleDetails(4)">
+                <span class="sake-number">④</span>
+                
+                <div class="content-ja active">
+                    <div class="sake-name">喜楽長 たわわ純米吟醸</div>
+                    <div class="sake-origin">滋賀・喜多酒造</div>
+                    <div class="pairing-info">握り</div>
+                </div>
+                
+                <div class="content-en">
+                    <div class="sake-name">Kirakucho Tawawa Junmai Ginjo</div>
+                    <div class="sake-origin">Shiga・Kita Brewery</div>
+                    <div class="pairing-info">Nigiri sushi</div>
+                </div>
+                
+                <div class="sake-details" id="details4">
+                    <div class="details-content content-ja active">
+                        <h3>🏔️ 喜楽長 たわわの特徴</h3>
+                        <p>滋賀県の老舗蔵による<strong>純米吟醸</strong>。琵琶湖の豊かな水系で醸される、ふくよかで上品な味わいが特徴の吟醸酒です。</p>
+                        <p>米の旨味を活かした丁寧な造りで、握り寿司との相性も良く、魚の旨味を引き立てます。</p>
+                    </div>
+                    
+                    <div class="details-content content-en">
+                        <h3>🏔️ Kirakucho Tawawa Characteristics</h3>
+                        <p>A <strong>junmai ginjo</strong> from a long-established brewery in Shiga Prefecture. Brewed with the rich water system near Lake Biwa, it features a full-bodied and elegant ginjo character.</p>
+                        <p>Careful brewing that highlights rice umami, with excellent compatibility with nigiri sushi, enhancing the fish's delicious flavor.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sake Item 5 -->
+            <div class="sake-item" onclick="toggleDetails(5)">
+                <span class="sake-number">⑤</span>
+                
+                <div class="content-ja active">
+                    <div class="sake-name">黒龍 純米大吟醸</div>
+                    <div class="sake-origin">福井・黒龍酒造</div>
+                    <div class="pairing-info">茶碗蒸し</div>
+                </div>
+                
+                <div class="content-en">
+                    <div class="sake-name">Kokuryu Junmai Daiginjo</div>
+                    <div class="sake-origin">Fukui・Kokuryu Brewery</div>
+                    <div class="pairing-info">Chawanmushi (savory egg custard)</div>
+                </div>
+                
+                <div class="sake-details" id="details5">
+                    <div class="details-content content-ja active">
+                        <h3>🐉 黒龍 純米大吟醸の特徴</h3>
+                        <p>福井の名門蔵・黒龍酒造による<strong>最高級クラス</strong>の純米大吟醸。洗練された香りと繊細な味わい、上品な仕上がりで日本酒の最高峰の一つとして知られています。</p>
+                        <p>極めて洗練された味わいが、繊細な茶碗蒸しの優しい味わいと絶妙にマッチします。</p>
+                    </div>
+                    
+                    <div class="details-content content-en">
+                        <h3>🐉 Kokuryu Junmai Daiginjo Characteristics</h3>
+                        <p>From the prestigious Kokuryu Brewery in Fukui, this represents their <strong>premium tier</strong>. Known for refined aroma, delicate flavor, and elegant finish - considered one of Japan's finest sake.</p>
+                        <p>Extremely refined taste that perfectly matches the gentle flavors of delicate chawanmushi.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sake Item 6 -->
+            <div class="sake-item" onclick="toggleDetails(6)">
+                <span class="sake-number">⑥</span>
+                
+                <div class="content-ja active">
+                    <div class="sake-name">ど辛 純米生原酒</div>
+                    <div class="sake-origin">秋田</div>
+                    <div class="pairing-info">握り、お椀</div>
+                </div>
+                
+                <div class="content-en">
+                    <div class="sake-name">Dokara Junmai Nama Genshu</div>
+                    <div class="sake-origin">Akita</div>
+                    <div class="pairing-info">Nigiri sushi, soup bowl</div>
+                </div>
+                
+                <div class="sake-details" id="details6">
+                    <div class="details-content content-ja active">
+                        <h3>💪 ど辛 純米生原酒の特徴</h3>
+                        <p>秋田の個性的な銘柄で、<strong>生原酒</strong>らしい力強さとフレッシュさを持つ、インパクトのある味わいが特徴です。</p>
+                        <p>無濾過・生・原酒の三拍子が揃った、パンチの効いた日本酒。握りやお椀などの料理との相性も抜群です。</p>
+                    </div>
+                    
+                    <div class="details-content content-en">
+                        <h3>💪 Dokara Junmai Nama Genshu Characteristics</h3>
+                        <p>A distinctive Akita brand featuring the bold strength and freshness characteristic of <strong>nama genshu</strong> (unpasteurized, undiluted sake), delivering an impactful drinking experience.</p>
+                        <p>Combining unfiltered, unpasteurized, and undiluted characteristics, this punchy sake pairs excellently with nigiri sushi and soup dishes.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sake Item 7 -->
+            <div class="sake-item" onclick="toggleDetails(7)">
+                <span class="sake-number">⑦</span>
+                
+                <div class="content-ja active">
+                    <div class="sake-name">風の森</div>
+                    <div class="sake-origin">奈良・油長酒造</div>
+                    <div class="pairing-info">デザート（アイスクリーム）</div>
+                </div>
+                
+                <div class="content-en">
+                    <div class="sake-name">Kaze no Mori</div>
+                    <div class="sake-origin">Nara・Yucho Brewery</div>
+                    <div class="pairing-info">Dessert (Ice cream)</div>
+                </div>
+                
+                <div class="sake-details" id="details7">
+                    <div class="details-content content-ja active">
+                        <h3>🌿 風の森の特徴</h3>
+                        <p>奈良・油長酒造による<strong>自然派日本酒</strong>の代表格。無濾過生酒で自然な発泡感があり、フレッシュで爽やかな味わいが特徴です。</p>
+                        <p>微発泡の爽やかさとクリーンな味わいが、アイスクリームなどのデザートとの組み合わせで新しい発見をもたらします。</p>
+                    </div>
+                    
+                    <div class="details-content content-en">
+                        <h3>🌿 Kaze no Mori Characteristics</h3>
+                        <p>Representative <strong>natural-style sake</strong> from Yucho Brewery in Nara. As an unfiltered nama sake with natural effervescence, it offers fresh and refreshing characteristics.</p>
+                        <p>The refreshing micro-effervescence and clean taste create innovative discoveries when paired with desserts like ice cream.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'ja';
+        
+        function switchLanguage(lang) {
+            // Update current language
+            currentLanguage = lang;
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Hide all content
+            document.querySelectorAll('.content-ja, .content-en').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected language content
+            document.querySelectorAll(`.content-${lang}`).forEach(content => {
+                content.classList.add('active');
+            });
+        }
+        
+        function toggleDetails(number) {
+            const details = document.getElementById(`details${number}`);
+            const item = details.parentElement;
+            
+            // Close all other details
+            for (let i = 1; i <= 7; i++) {
+                if (i !== number) {
+                    document.getElementById(`details${i}`).classList.remove('show');
+                    document.getElementById(`details${i}`).parentElement.classList.remove('active');
+                }
+            }
+            
+            // Toggle current details
+            if (details.classList.contains('show')) {
+                details.classList.remove('show');
+                item.classList.remove('active');
+            } else {
+                details.classList.add('show');
+                item.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
